@@ -1,0 +1,37 @@
+# Metrics
+
+- nodestat_fc_host
+  - tags:
+    - fibrechannel
+    - nodename
+	- type
+  - fields:
+    - port_state (string)
+    - port_state_code (int) 0-online, 1-unknown, 2-blocked, 3-linkdown
+    - error_frames (int)
+    - rx_frames (int)
+    - tx_frames (int)
+	- link_failure_count (int)
+- nodestat_net
+  - tags:
+    - ifalias
+	- interface
+	- protocol
+  - fields:
+    - carrier (int) -1-unknown, 0-down, 1-up
+    - dormant (int)
+    - duplex (string)
+    - ifalias (string)
+    - link_mode (int)
+    - operstate (int)
+    - flag_lower_up (bool)
+    - flag_running (bool)
+    - flag_up (bool)
+- nodestat_pressure
+  - tags:
+  - fields:
+	- cpu_waiting_avg60 (float)
+	- io_waiting_avg60 (float)
+	- io_stalled_avg60 (float)
+	- memory_waiting_avg60 (float)
+	- memory_stalled_avg60 (float)
