@@ -17,6 +17,7 @@ builds:
     ldflags:
       - -s -w -X "main.Version={{.Version}}"
 archives:
+  - format_overrides: &overrides
     files:
       - LICENSE
       - README.md
