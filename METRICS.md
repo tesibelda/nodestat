@@ -8,10 +8,14 @@
   - fields:
     - port_state (string)
     - port_state_code (int) 0-online, 1-unknown, 2-blocked, 3-linkdown
+	- link_failure_count (int)
+	- seconds_since_last_reset (int)
+	- loss_of_signal_count (int)
+	- loss_of_sync_count (int)
+	- nos_count (int)
     - error_frames (int)
     - rx_frames (int)
     - tx_frames (int)
-	- link_failure_count (int)
 - nodestat_net
   - tags:
     - ifalias
@@ -23,7 +27,8 @@
     - duplex (string)
     - ifalias (string)
     - link_mode (int)
-    - operstate (int)
+    - operstate (string)
+    - operstate_code (int)
     - flag_lower_up (bool)
     - flag_running (bool)
     - flag_up (bool)
@@ -33,5 +38,5 @@
 	- cpu_waiting_avg60 (float)
 	- io_waiting_avg60 (float)
 	- io_stalled_avg60 (float)
-	- memory_waiting_avg60 (float)
-	- memory_stalled_avg60 (float)
+	- memory_waiting_avg60 (float) percentage over 60s
+	- memory_stalled_avg60 (float) percentage over 60s

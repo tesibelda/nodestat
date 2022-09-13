@@ -51,7 +51,7 @@ func GatherSysFcHostInfo() error {
 	}
 
 	tags := make(map[string]string, 3)
-	fields := make(map[string]interface{}, 6)
+	fields := make(map[string]interface{}, 10)
 	m := simplemetric.New("nodestat_fc_host", tags, fields)
 
 	for _, fcInfo := range fcDevices {
@@ -65,10 +65,14 @@ func GatherSysFcHostInfo() error {
 		tags["type"] = fcInfo.PortType
 		fields["port_state"] = fcInfo.PortState
 		fields["port_state_code"] = state
+		fields["link_failure_count"] = fcInfo.Counters.LinkFailureCount
+		fields["seconds_since_last_reset"] = fcInfo.Counters.SecondsSinceLastReset
+		fields["loss_of_signal_count"] = fcInfo.Counters.LossOfSignalCount
+		fields["loss_of_sync_count"] = fcInfo.Counters.LossOfSyncCount
+		fields["nos_count"] = fcInfo.Counters.NosCount
 		fields["error_frames"] = fcInfo.Counters.ErrorFrames
 		fields["rx_frames"] = fcInfo.Counters.RXFrames
 		fields["tx_frames"] = fcInfo.Counters.TXFrames
-		fields["link_failure_count"] = fcInfo.Counters.LinkFailureCount
 
 		fmt.Fprintln(os.Stdout, m.String("influx"))
 	}
