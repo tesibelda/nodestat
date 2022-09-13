@@ -48,22 +48,37 @@ var iftype = map[int64]string{
 	805: "wireless",
 }
 
+// interface operstate code mapping
+//  ref: https://www.kernel.org/doc/html/latest/networking/operstates.html
+var ifOperState = map[string]int{
+	"up":             0,
+	"dormant":        1,
+	"unknown":        2,
+	"testing":        3,
+	"lowerlayerdown": 4,
+	"down":           5,
+	"notpresent":     6,
+}
+
 // GatherSysNetInfo prints network interface metrics from /sys/class/net/
 func GatherSysNetInfo() error {
 	var (
+		netClass         sysfs.NetClass
+		err              error
 		itype            string
 		carrier, dormant int64
 		linkmode, flags  int64
+		state            int
 		ok               bool
 	)
 
-	netClass, err := getNetClassInfo()
+	netClass, err = getNetClassInfo()
 	if err != nil {
 		return err
 	}
 
 	tags := make(map[string]string, 2)
-	fields := make(map[string]interface{}, 9)
+	fields := make(map[string]interface{}, 10)
 	m := simplemetric.New("nodestat_net", tags, fields)
 
 	for _, ifaceInfo := range netClass {
@@ -92,6 +107,11 @@ func GatherSysNetInfo() error {
 		}
 
 		if itype != "loopback" {
+			state, ok = ifOperState[ifaceInfo.OperState]
+			if !ok {
+				state = 1
+			}
+
 			tags["interface"] = ifaceInfo.Name
 			tags["protocol"] = itype
 			fields["carrier"] = carrier
@@ -100,6 +120,7 @@ func GatherSysNetInfo() error {
 			fields["ifalias"] = ifaceInfo.IfAlias
 			fields["link_mode"] = linkmode
 			fields["operstate"] = ifaceInfo.OperState
+			fields["operstate_code"] = state
 			fields["flag_lower_up"] = ((flags>>16)%2 == 0)
 			fields["flag_running"] = ((flags>>6)%2 == 0)
 			fields["flag_up"] = !(flags%2 == 0)

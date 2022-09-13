@@ -27,6 +27,10 @@ You can optionally activate only certain collectors, for example:
   commands = ["/path/to/nodestat_binary net pressure"]
   data_format = "influx"
 ```
+Current collectors are:
+ fc_host - fibrechannel metrics from /sys/class/fc_host/
+ net - network interface metrics from /sys/class/net/
+ pressure - metrics from /proc/pressure/
 Metric timestamp precision will be 1s.
 
 * Restart or reload Telegraf.
@@ -41,10 +45,10 @@ Metric timestamp precision will be 1s.
 # Example output
 
 ```plain
-nodestat_fc_host,fibrechannel=host12,nodename=20000025ff1bab79,type=NPort\ (fabric\ via\ point-to-point) port_state="Online",port_state_code=0i 1662965695000000000
-nodestat_net,interface=eno1,protocol=ethernet link_mode=0i,flag_lower_up=true,flag_running=true,carrier=1i,dormant=0i,duplex="full",operstate="up",flag_up=true 1662965695000000000
-nodestat_net,interface=enp3s0f0,protocol=ethernet operstate="down",flag_up=true,carrier=0i,dormant=0i,duplex="unknown",link_mode=0i,flag_lower_up=true,flag_running=true 1662965695000000000
-nodestat_pressure io_waiting_avg60=16.67,io_stalled_avg60=16.49,cpu_waiting_avg60=0 1662965695000000000
+nodestat_fc_host,nodename=20000025ff1bab79,type=NPort\ (fabric\ via\ point-to-point),fibrechannel=host12 port_state="Online",port_state_code=0i,loss_of_signal_count=0i,loss_of_sync_count=0i,nos_count=1i,link_failure_count=1i,seconds_since_last_reset=14476044i,error_frames=0i,rx_frames=181397571i,tx_frames=749365874i 1662965695000000000
+nodestat_net,interface=eno1,protocol=ethernet carrier=1i,flag_running=true,flag_up=true,operstate_code=0i,flag_lower_up=true,dormant=0i,duplex="full",link_mode=0i,operstate="up"  1662965695000000000
+nodestat_net,interface=enp3s0f0,protocol=ethernet flag_running=true,flag_up=true,carrier=0i,duplex="unknown",link_mode=0i,operstate="down",operstate_code=5i,flag_lower_up=true,dormant=0i 1662965695000000000
+nodestat_pressure cpu_waiting_avg60=0,io_waiting_avg60=21.1,io_stalled_avg60=20.97 1662965695000000000
 ```
 
 # Metrics

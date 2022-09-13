@@ -28,7 +28,7 @@
     - ifalias (string)
     - link_mode (int)
     - operstate (string)
-    - operstate_code (int)
+    - operstate_code (int) 0-up, 1-dormant, 2-unknown, 3-testing, 4-lowerlayerdown, 5-down, 6-notpresent
     - flag_lower_up (bool)
     - flag_running (bool)
     - flag_up (bool)
