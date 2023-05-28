@@ -1,4 +1,4 @@
-// simplemetric helps with easy manupulation of simple telegraf metrics
+// simplemetric helps with easy manipulation of simple telegraf metrics
 //  without telegraf libraries dependency
 //
 // Author: Tesifonte Belda
@@ -38,11 +38,12 @@ func (m *SimpleMetric) SetTime(t time.Time) {
 }
 
 // String returns a representation of the metric in the given format string
-//  (https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_INPUT.md)
+//
+//	(https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_INPUT.md)
+//
 // Currently it only supports influx line protocol
 func (m *SimpleMetric) String(format string) string {
-	switch format {
-	case "influx":
+	if format == "influx" {
 		return m.stringInfluxLP()
 	}
 	return ""
@@ -63,7 +64,7 @@ func (m *SimpleMetric) stringInfluxLP() string {
 		buf.WriteString(comma)
 		buf.WriteString(k)
 		buf.WriteString(equal)
-		v = strings.Replace(v, " ", "\\ ", -1)
+		v = strings.ReplaceAll(v, " ", "\\ ")
 		buf.WriteString(v)
 	}
 	buf.WriteString(space)
@@ -121,7 +122,7 @@ func convertField(v interface{}) string {
 		buf.WriteString(i)
 	case string:
 		if len(v) > 0 {
-			v = strings.Replace(v, " ", "\\ ", -1)
+			v = strings.ReplaceAll(v, " ", "\\ ")
 			buf.WriteString(strconv.Quote(v))
 		}
 	}

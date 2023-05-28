@@ -49,7 +49,8 @@ var iftype = map[int64]string{
 }
 
 // interface operstate code mapping
-//  ref: https://www.kernel.org/doc/html/latest/networking/operstates.html
+//
+//	ref: https://www.kernel.org/doc/html/latest/networking/operstates.html
 var ifOperState = map[string]int{
 	"up":             0,
 	"dormant":        1,
