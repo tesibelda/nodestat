@@ -1,13 +1,14 @@
 module github.com/tesibelda/nodestat
 
-go 1.18
+go 1.19
 
 require (
-	github.com/prometheus/procfs v0.8.0
-	golang.org/x/exp v0.0.0-20220909182711-5c715a9e8561
+	github.com/influxdata/line-protocol/v2 v2.2.1
+	github.com/prometheus/procfs v0.10.0
+	golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1
 )
 
 require (
-	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f // indirect
-	golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f // indirect
+	golang.org/x/sync v0.2.0 // indirect
+	golang.org/x/sys v0.8.0 // indirect
 )
