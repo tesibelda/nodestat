@@ -10,17 +10,23 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/tesibelda/nodestat/internal/fsproc"
-	"github.com/tesibelda/nodestat/internal/fssys"
+	"github.com/tesibelda/nodestat/internal/collectors"
 	"golang.org/x/exp/slices"
 )
 
-var showHelp = flag.Bool("help", false, "show help")
-var showVersion = flag.Bool("version", false, "show version and exit")
-var Version string = ""
+var Version string
 
 func main() {
-	var err error
+	var (
+		showHelp    = flag.Bool("help", false, "show help")
+		showVersion = flag.Bool("version", false, "show version and exit")
+		disableAll  = flag.Bool(
+			"disable-all",
+			false,
+			"disable all collections but those provided",
+		)
+		err error
+	)
 
 	// parse command line options
 	flag.Parse()
@@ -28,34 +34,49 @@ func main() {
 		fmt.Println("nodestat", Version)
 		os.Exit(0)
 	}
+
+	// get available collectors
+	colsav := collectors.GetInfo()
+
 	if *showHelp {
-		fmt.Println("nodestat [--version] [--help] [collection]...")
-		fmt.Println("  Possible collections are: fc_host net pressure. Default: all")
+		help(colsav)
 		os.Exit(0)
 	}
 	cols := flag.Args()
 
-	// Get and display fibrechannels info
-	if len(cols) == 0 || slices.Contains(cols, "fc_host") {
-		if err = fssys.GatherSysFcHostInfo(); err != nil {
-			fmt.Fprintln(os.Stderr, "Could not obtain fibrechannels info:", err)
+	// parse given collector list
+	for _, in := range cols {
+		if !collectors.CollectorAvailable(in) {
+			fmt.Fprintf(os.Stderr, "Collector %s not available\n", in)
+			help(colsav)
 			os.Exit(1)
 		}
 	}
 
-	// Get and display network interfaces info
-	if len(cols) == 0 || slices.Contains(cols, "net") {
-		if err = fssys.GatherSysNetInfo(); err != nil {
-			fmt.Fprintln(os.Stderr, "Could not obtain network interfaces info:", err)
+	// run enabled collectors
+	for _, col := range colsav {
+		if *disableAll && !slices.Contains(cols, col.Name) {
+			continue
+		}
+		if !col.IsDefault && !slices.Contains(cols, col.Name) {
+			continue
+		}
+		if err = collectors.Gather(col.Name); err != nil {
+			fmt.Fprintf(os.Stderr, "Could not obtain %s info: %s\n", col.What, err)
 			os.Exit(1)
 		}
 	}
+}
 
-	// Get and display pressure info if available
-	if len(cols) == 0 || slices.Contains(cols, "fc_host") {
-		if err = fsproc.GatherProcPressureInfo(); err != nil {
-			fmt.Fprintln(os.Stderr, "Could not obtain pressure info:", err)
-			os.Exit(1)
-		}
+func help(colsav []collectors.CollectorInfo) {
+	fmt.Println("nodestat [--version] [--help] [--disable-all] [collector]...")
+	fmt.Println("  Possible collectors are:")
+	for _, col := range colsav {
+		fmt.Printf(
+			"   %s: collects %s info. Enabled by default: %t\n",
+			col.Name,
+			col.What,
+			col.IsDefault,
+		)
 	}
 }

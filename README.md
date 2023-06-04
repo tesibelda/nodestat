@@ -1,6 +1,6 @@
-# Telegraf exec nodestat input
+# nodestat input plugin
 
-nodestat is an exec input plugin for [Telegraf](https://github.com/influxdata/telegraf) that gathers status and basic stats from Linux /proc and /sys pseudo filesystems. It is aimed to be small, fast and to gather metrics not (yet) provided by native telegraf's input. Inspired by [node_exporter](https://github.com/prometheus/node_exporter).
+nodestat is an exec input plugin for [telegraf](https://github.com/influxdata/telegraf) that gathers status and basic stats from Linux /proc and /sys pseudo filesystems. It is aimed to be small, fast and to gather metrics not (yet) provided by native telegraf's input. Inspired by [node_exporter](https://github.com/prometheus/node_exporter).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/tesibelda/nodestat/raw/master/LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/tesibelda/nodestat)](https://goreportcard.com/report/github.com/tesibelda/nodestat)
@@ -26,6 +26,11 @@ You can optionally activate only certain collectors, for example:
 [[inputs.exec]]
   commands = ["/path/to/nodestat_binary net pressure"]
   data_format = "influx"
+```
+
+Command line options are:
+```
+nodestat [--version] [--help] [--disable-all] [collector]...
 ```
 Current collectors are:
  fc_host - fibrechannel metrics from /sys/class/fc_host/
