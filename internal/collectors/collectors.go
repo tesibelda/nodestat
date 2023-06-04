@@ -57,7 +57,6 @@ func Gather(colname string) error {
 	return fmt.Errorf("collector not available")
 }
 
-
 func CollectorAvailable(in string) bool {
 	for _, col := range collectInfos {
 		if in == col.Name {

@@ -45,21 +45,21 @@ func GatherProcPressureInfo() error {
 		switch res {
 		case "cpu":
 			if stats.Some != nil {
-				fields["cpu_waiting_avg60"] = float64(stats.Some.Avg60)
+				fields["cpu_waiting_avg60"] = stats.Some.Avg60
 			}
 		case "io":
 			if stats.Some != nil {
-				fields["io_waiting_avg60"] = float64(stats.Some.Avg60)
+				fields["io_waiting_avg60"] = stats.Some.Avg60
 			}
 			if stats.Full != nil {
-				fields["io_stalled_avg60"] = float64(stats.Full.Avg60)
+				fields["io_stalled_avg60"] = stats.Full.Avg60
 			}
 		case "mem":
 			if stats.Some != nil {
-				fields["memory_waiting_avg60"] = float64(stats.Some.Avg60)
+				fields["memory_waiting_avg60"] = stats.Some.Avg60
 			}
 			if stats.Full != nil {
-				fields["memory_stalled_avg60"] = float64(stats.Full.Avg60)
+				fields["memory_stalled_avg60"] = stats.Full.Avg60
 			}
 		}
 	}
