@@ -32,10 +32,10 @@ Command line options are:
 ```
 nodestat [--version] [--help] [--disable-all] [collector]...
 ```
-Current collectors are:
- fc_host - fibrechannel metrics from /sys/class/fc_host/
- net - network interface metrics from /sys/class/net/
- pressure - metrics from /proc/pressure/
+Current collectors are:\
+ fc_host - fibrechannel metrics from /sys/class/fc_host/\
+ net - network interface metrics from /sys/class/net/\
+ pressure - metrics from /proc/pressure/\
 Metric timestamp precision will be 1s.
 
 * Restart or reload Telegraf.
@@ -65,13 +65,13 @@ Download the repo
 
     $ git clone git@github.com:tesibelda/nodestat.git
 
-build the "nodestat" binary
+build the "nodestat" binary. If under Windows set GOOS environment variable to linux
 
     $ go build -o bin/nodestat cmd/main.go
 
  If you use [go-task](https://github.com/go-task/task) execute one of these
  
-    $ task linux:build
+    $ task build
 
 # Author
 

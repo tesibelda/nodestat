@@ -1,8 +1,8 @@
 version: '3'
 
 vars:
-#  GIT_COMMIT:
-#    sh: git log -n 1 --format=%h
+  GIT_COMMIT:
+    sh: git log -n 1 --format=%h
 
   GOOS: linux
 
@@ -42,7 +42,7 @@ tasks:
       - goreleaser release --rm-dist
 
   build:
-    desc: Build nodestatc
+    desc: Build nodestat
     cmds:
       - go build -v -ldflags="-w -s -X main.commit={{.GIT_COMMIT}}" -o bin/nodestat ./cmd/main.go
 
