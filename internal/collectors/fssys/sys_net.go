@@ -15,9 +15,10 @@ package fssys
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/prometheus/procfs/sysfs"
-	"github.com/tesibelda/nodestat/pkg/simplemetric"
+	"github.com/tesibelda/lightmetric/metric"
 )
 
 // network interface type mapping
@@ -65,6 +66,7 @@ var ifOperState = map[string]int{
 func GatherSysNetInfo() error {
 	var (
 		netClass         sysfs.NetClass
+		m                metric.Metric
 		err              error
 		itype            string
 		carrier, dormant int64
@@ -73,14 +75,13 @@ func GatherSysNetInfo() error {
 		ok               bool
 	)
 
-	netClass, err = getNetClassInfo()
-	if err != nil {
+	if netClass, err = getNetClassInfo(); err != nil {
 		return err
 	}
+	t := metric.TimeWithPrecision(time.Now(), time.Second)
 
 	tags := make(map[string]string, 2)
 	fields := make(map[string]interface{}, 10)
-	m := simplemetric.New("nodestat_net", tags, fields)
 
 	for _, ifaceInfo := range netClass {
 		if ifaceInfo.Type == nil {
@@ -102,14 +103,12 @@ func GatherSysNetInfo() error {
 			flags = *ifaceInfo.Flags
 		}
 
-		itype, ok = iftype[*ifaceInfo.Type]
-		if !ok {
+		if itype, ok = iftype[*ifaceInfo.Type]; !ok {
 			itype = "other"
 		}
 
 		if itype != "loopback" {
-			state, ok = ifOperState[ifaceInfo.OperState]
-			if !ok {
+			if state, ok = ifOperState[ifaceInfo.OperState]; !ok {
 				state = 1
 			}
 
@@ -126,7 +125,8 @@ func GatherSysNetInfo() error {
 			fields["flag_running"] = ((flags>>6)%2 == 0)
 			fields["flag_up"] = !(flags%2 == 0)
 
-			fmt.Fprintln(os.Stdout, m.String("influx"))
+			m = metric.New("nodestat_net", tags, fields, t)
+			fmt.Fprint(os.Stdout, m.String(metric.InfluxLp))
 		}
 	}
 

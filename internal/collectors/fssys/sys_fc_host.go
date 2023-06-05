@@ -12,9 +12,10 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/prometheus/procfs/sysfs"
-	"github.com/tesibelda/nodestat/pkg/simplemetric"
+	"github.com/tesibelda/lightmetric/metric"
 )
 
 // fc state code mapping
@@ -32,6 +33,7 @@ var fcState = map[string]int{
 // GatherSysFcHostInfo prints fibrechannel metrics from /sys/class/fc_host/
 func GatherSysFcHostInfo() error {
 	var (
+		m     metric.Metric
 		state int
 		ok    bool
 	)
@@ -49,14 +51,13 @@ func GatherSysFcHostInfo() error {
 		}
 		return fmt.Errorf("failed to retrieve fibrechannel stats: %w", err)
 	}
+	t := metric.TimeWithPrecision(time.Now(), time.Second)
 
 	tags := make(map[string]string, 3)
 	fields := make(map[string]interface{}, 10)
-	m := simplemetric.New("nodestat_fc_host", tags, fields)
 
 	for _, fcInfo := range fcDevices {
-		state, ok = fcState[fcInfo.PortState]
-		if !ok {
+		if state, ok = fcState[fcInfo.PortState]; !ok {
 			state = 1
 		}
 
@@ -74,7 +75,8 @@ func GatherSysFcHostInfo() error {
 		fields["rx_frames"] = fcInfo.Counters.RXFrames
 		fields["tx_frames"] = fcInfo.Counters.TXFrames
 
-		fmt.Fprintln(os.Stdout, m.String("influx"))
+		m = metric.New("nodestat_fc_host", tags, fields, t)
+		fmt.Fprint(os.Stdout, m.String(metric.InfluxLp))
 	}
 
 	return nil

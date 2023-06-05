@@ -13,17 +13,15 @@ import (
 	"fmt"
 	"os"
 	"syscall"
+	"time"
 
 	"github.com/prometheus/procfs"
-	"github.com/tesibelda/nodestat/pkg/simplemetric"
+	"github.com/tesibelda/lightmetric/metric"
 )
 
 // GatherProcPressureInfo prints pressure metrics from /proc/pressure/
 func GatherProcPressureInfo() error {
-	var (
-		psiResources = []string{"cpu", "io", "memory"}
-		err          error
-	)
+	var psiResources = []string{"cpu", "io", "memory"}
 
 	fs, err := procfs.NewDefaultFS()
 	if err != nil {
@@ -31,7 +29,6 @@ func GatherProcPressureInfo() error {
 	}
 
 	fields := make(map[string]interface{}, 5)
-	m := simplemetric.New("nodestat_pressure", nil, fields)
 
 	for _, res := range psiResources {
 		stats, err := fs.PSIStatsForResource(res)
@@ -63,7 +60,9 @@ func GatherProcPressureInfo() error {
 			}
 		}
 	}
-	fmt.Fprintln(os.Stdout, m.String("influx"))
+	t := metric.TimeWithPrecision(time.Now(), time.Second)
+	m := metric.New("nodestat_pressure", nil, fields, t)
+	fmt.Fprint(os.Stdout, m.String(metric.InfluxLp))
 
 	return nil
 }
