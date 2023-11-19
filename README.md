@@ -63,7 +63,7 @@ See [Metrics](https://github.com/tesibelda/nodestat/blob/master/METRICS.md)
 
 Download the repo
 
-    $ git clone git@github.com:tesibelda/nodestat.git
+    $ git clone https://github.com/tesibelda/nodestat.git
 
 build the "nodestat" binary. If under Windows set GOOS environment variable to linux
 
