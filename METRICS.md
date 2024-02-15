@@ -40,3 +40,10 @@
 	- io_stalled_avg60 (float)
 	- memory_waiting_avg60 (float) percentage over 60s
 	- memory_stalled_avg60 (float) percentage over 60s
+- nodestat_userprocs
+  - tags:
+    - group
+	- user
+  - fields:
+    - processes (int)
+	- threads (int)

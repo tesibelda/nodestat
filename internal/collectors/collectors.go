@@ -25,7 +25,7 @@ type CollectorInfo struct {
 var collectInfos []CollectorInfo
 
 func init() {
-	var c []CollectorInfo
+	var c = make([]CollectorInfo, 0, 4)
 	var ci CollectorInfo
 
 	ci = CollectorInfo{"fc_host", true, "fibrechannels", fssys.GatherSysFcHostInfo}
@@ -33,6 +33,8 @@ func init() {
 	ci = CollectorInfo{"net", true, "network interfaces", fssys.GatherSysNetInfo}
 	c = append(c, ci)
 	ci = CollectorInfo{"pressure", true, "pressure", fsproc.GatherProcPressureInfo}
+	c = append(c, ci)
+	ci = CollectorInfo{"userprocs", true, "processes per user", fsproc.GatherProcUserProcsInfo}
 	c = append(c, ci)
 	collectInfos = c
 }

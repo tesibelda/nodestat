@@ -36,6 +36,7 @@ Current collectors are:\
  fc_host - fibrechannel metrics from /sys/class/fc_host/\
  net - network interface metrics from /sys/class/net/\
  pressure - metrics from /proc/pressure/\
+ userprocs - metrics for the number of processes and threads per user\
 Metric timestamp precision will be 1s.
 
 * Restart or reload Telegraf.
@@ -54,6 +55,8 @@ nodestat_fc_host,nodename=20000025ff1bab79,type=NPort\ (fabric\ via\ point-to-po
 nodestat_net,interface=eno1,protocol=ethernet carrier=1i,flag_running=true,flag_up=true,operstate_code=0i,flag_lower_up=true,dormant=0i,duplex="full",link_mode=0i,operstate="up"  1662965695000000000
 nodestat_net,interface=enp3s0f0,protocol=ethernet flag_running=true,flag_up=true,carrier=0i,duplex="unknown",link_mode=0i,operstate="down",operstate_code=5i,flag_lower_up=true,dormant=0i 1662965695000000000
 nodestat_pressure cpu_waiting_avg60=0,io_waiting_avg60=21.1,io_stalled_avg60=20.97 1662965695000000000
+nodestat_userprocs,group=root,user=root threads=173i,processes=124i 1662965695000000000
+nodestat_userprocs,group=postfix,user=postfix processes=3i,threads=3i 1662965695000000000
 ```
 
 # Metrics
