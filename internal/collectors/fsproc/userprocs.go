@@ -9,6 +9,7 @@
 package fsproc
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/user"
@@ -64,7 +65,7 @@ func GatherProcUserProcsInfo() error {
 		totalProcs++
 	}
 	if totalProcs == 0 {
-		return fmt.Errorf("unable to list any processes")
+		return errors.New("unable to list any processes")
 	}
 
 	var (

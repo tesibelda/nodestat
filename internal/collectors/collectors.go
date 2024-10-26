@@ -8,7 +8,7 @@
 package collectors
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/tesibelda/nodestat/internal/collectors/fsproc"
 	"github.com/tesibelda/nodestat/internal/collectors/fssys"
@@ -56,7 +56,7 @@ func Gather(colname string) error {
 		return f()
 	}
 
-	return fmt.Errorf("collector not available")
+	return errors.New("collector not available")
 }
 
 func CollectorAvailable(in string) bool {
