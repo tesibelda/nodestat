@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"os"
 	"os/user"
+	"strconv"
 	"time"
 
 	"github.com/prometheus/procfs"
@@ -35,19 +36,22 @@ func GatherProcUserProcsInfo() error {
 		return fmt.Errorf("unable to list all processes: %w", err)
 	}
 
-	uidprocs := make(map[string]userInfo, 10)
-	totalProcs, th, ok := 0, 0, false
-	info := userInfo{}
+	var (
+		uidprocs       = make(map[uint64]userInfo, 10)
+		info           userInfo
+		status         procfs.ProcStatus
+		stat           procfs.ProcStat
+		totalProcs, th int
+		ok             bool
+	)
 	for _, pid := range p {
-		status, err := pid.NewStatus()
-		if err != nil {
+		if status, err = pid.NewStatus(); err != nil {
 			// PIDs can vanish between getting the list and getting stats.
 			continue
 		}
 
 		th = 0
-		stat, err := pid.Stat()
-		if err == nil {
+		if stat, err = pid.Stat(); err == nil {
 			th = stat.NumThreads
 		}
 
@@ -63,18 +67,20 @@ func GatherProcUserProcsInfo() error {
 		return fmt.Errorf("unable to list any processes")
 	}
 
-	fields := make(map[string]interface{}, 2)
-	tags := make(map[string]string, 2)
-	var t time.Time
-	var m metric.Metric
+	var (
+		fields = make(map[string]interface{}, 2)
+		tags   = make(map[string]string, 2)
+		t      time.Time
+		m      metric.Metric
+		usr    *user.User
+		grp    *user.Group
+	)
 	for k, v := range uidprocs {
-		usr, err := user.LookupId(k)
-		if err != nil {
+		if usr, err = user.LookupId(strconv.FormatUint(k, 10)); err != nil {
 			continue
 		}
 		if len(usr.Username) > 0 {
-			grp, err := user.LookupGroupId(usr.Gid)
-			if err != nil {
+			if grp, err = user.LookupGroupId(usr.Gid); err != nil {
 				grp = &user.Group{}
 			}
 

@@ -4,7 +4,7 @@
 // License: The MIT License (MIT)
 //
 // References:
-//  https://pkg.go.dev/github.com/prometheus/procfs@v0.8.0/sysfs#FibreChannelClass
+//  https://pkg.go.dev/github.com/prometheus/procfs@v0.15.1/sysfs#FibreChannelClass
 
 package fssys
 
@@ -57,23 +57,23 @@ func GatherSysFcHostInfo() error {
 	fields := make(map[string]interface{}, 10)
 
 	for _, fcInfo := range fcDevices {
-		if state, ok = fcState[fcInfo.PortState]; !ok {
+		if state, ok = fcState[*fcInfo.PortState]; !ok {
 			state = 1
 		}
 
-		tags["fibrechannel"] = fcInfo.Name
-		tags["nodename"] = fcInfo.NodeName
-		tags["type"] = fcInfo.PortType
-		fields["port_state"] = fcInfo.PortState
+		tags["fibrechannel"] = *fcInfo.Name
+		tags["nodename"] = *fcInfo.NodeName
+		tags["type"] = *fcInfo.PortType
+		fields["port_state"] = *fcInfo.PortState
 		fields["port_state_code"] = state
-		fields["link_failure_count"] = fcInfo.Counters.LinkFailureCount
-		fields["seconds_since_last_reset"] = fcInfo.Counters.SecondsSinceLastReset
-		fields["loss_of_signal_count"] = fcInfo.Counters.LossOfSignalCount
-		fields["loss_of_sync_count"] = fcInfo.Counters.LossOfSyncCount
-		fields["nos_count"] = fcInfo.Counters.NosCount
-		fields["error_frames"] = fcInfo.Counters.ErrorFrames
-		fields["rx_frames"] = fcInfo.Counters.RXFrames
-		fields["tx_frames"] = fcInfo.Counters.TXFrames
+		fields["link_failure_count"] = *fcInfo.Counters.LinkFailureCount
+		fields["seconds_since_last_reset"] = *fcInfo.Counters.SecondsSinceLastReset
+		fields["loss_of_signal_count"] = *fcInfo.Counters.LossOfSignalCount
+		fields["loss_of_sync_count"] = *fcInfo.Counters.LossOfSyncCount
+		fields["nos_count"] = *fcInfo.Counters.NosCount
+		fields["error_frames"] = *fcInfo.Counters.ErrorFrames
+		fields["rx_frames"] = *fcInfo.Counters.RXFrames
+		fields["tx_frames"] = *fcInfo.Counters.TXFrames
 
 		m = metric.New("nodestat_fc_host", tags, fields, t)
 		fmt.Fprint(os.Stdout, m.String(metric.InfluxLp))
