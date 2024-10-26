@@ -8,15 +8,15 @@
   - fields:
     - port_state (string)
     - port_state_code (int) 0-online, 1-unknown, 2-blocked, 3-linkdown
-	- link_failure_count (int)
-	- seconds_since_last_reset (int)
-	- loss_of_signal_count (int)
-	- loss_of_sync_count (int)
-	- nos_count (int)
-    - error_frames (int)
-    - rx_frames (int)
-    - tx_frames (int)
-    - fcp_packet_aborts (int)
+	- link_failure_count (uint)
+	- seconds_since_last_reset (uint)
+	- loss_of_signal_count (uint)
+	- loss_of_sync_count (uint)
+	- nos_count (uint)
+    - error_frames (uint)
+    - rx_frames (uint)
+    - tx_frames (uint)
+    - fcp_packet_aborts (uint)
 - nodestat_net
   - tags:
     - ifalias

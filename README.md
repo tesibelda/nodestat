@@ -30,7 +30,7 @@ You can optionally activate only certain collectors, for example:
 
 Command line options are:
 ```
-nodestat [--version] [--help] [--disable-all] [collector]...
+nodestat [--version] [--help] [collector]...
 ```
 Current collectors are:\
  fc_host - fibrechannel metrics from /sys/class/fc_host/\
@@ -51,7 +51,7 @@ Metric timestamp precision will be 1s.
 # Example output
 
 ```plain
-nodestat_fc_host,nodename=20000025ff1bab79,type=NPort\ (fabric\ via\ point-to-point),fibrechannel=host12 port_state="Online",port_state_code=0i,loss_of_signal_count=0i,loss_of_sync_count=0i,nos_count=1i,link_failure_count=1i,seconds_since_last_reset=14476044i,error_frames=0i,rx_frames=181397571i,tx_frames=749365874i 1662965695000000000
+nodestat_fc_host,nodename=20000025ff1bab79,type=NPort\ (fabric\ via\ point-to-point),fibrechannel=host12 port_state="Online",port_state_code=0u,loss_of_signal_count=0u,loss_of_sync_count=0u,nos_count=1u,link_failure_count=1u,seconds_since_last_reset=14476044u,error_frames=0u,rx_frames=181397571u,tx_frames=749365874u,fcp_packet_aborts=0u 1662965695000000000
 nodestat_net,interface=eno1,protocol=ethernet carrier=1i,flag_running=true,flag_up=true,operstate_code=0i,flag_lower_up=true,dormant=0i,duplex="full",link_mode=0i,operstate="up"  1662965695000000000
 nodestat_net,interface=enp3s0f0,protocol=ethernet flag_running=true,flag_up=true,carrier=0i,duplex="unknown",link_mode=0i,operstate="down",operstate_code=5i,flag_lower_up=true,dormant=0i 1662965695000000000
 nodestat_pressure cpu_waiting_avg60=0,io_waiting_avg60=21.1,io_stalled_avg60=20.97 1662965695000000000

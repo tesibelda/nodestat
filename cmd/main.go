@@ -20,12 +20,8 @@ func main() {
 	var (
 		showHelp    = flag.Bool("help", false, "show help")
 		showVersion = flag.Bool("version", false, "show version and exit")
-		disableAll  = flag.Bool(
-			"disable-all",
-			false,
-			"disable all collections but those provided",
-		)
-		err error
+		exclude     = flag.Bool("exclude", false, "exclude given collectors")
+		err         error
 	)
 
 	// parse command line options
@@ -55,22 +51,27 @@ func main() {
 
 	// run enabled collectors
 	for _, col := range colsav {
-		if *disableAll && !slices.Contains(cols, col.Name) {
-			continue
-		}
-		if !col.IsDefault && !slices.Contains(cols, col.Name) {
-			continue
+		if len(cols) > 0 {
+			if *exclude && slices.Contains(cols, col.Name) {
+				continue
+			}
+			if !*exclude && !slices.Contains(cols, col.Name) {
+				continue
+			}
+			if !*exclude && !col.IsDefault {
+				continue
+			}
 		}
 		if err = collectors.Gather(col.Name); err != nil {
-			fmt.Fprintf(os.Stderr, "Could not obtain %s info: %s\n", col.What, err)
+			fmt.Fprintf(os.Stderr, "Could not get %s info: %s\n", col.What, err)
 			os.Exit(1)
 		}
 	}
 }
 
 func help(colsav []collectors.CollectorInfo) {
-	fmt.Println("nodestat [--version] [--help] [--disable-all] [collector]...")
-	fmt.Println("  Possible collectors are:")
+	fmt.Println("nodestat [--version] [--help] [--exclude] [collector]...")
+	fmt.Println("  Available collectors are:")
 	for _, col := range colsav {
 		fmt.Printf(
 			"   %s: collects %s info. Enabled by default: %t\n",
