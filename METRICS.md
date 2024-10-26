@@ -16,6 +16,7 @@
     - error_frames (int)
     - rx_frames (int)
     - tx_frames (int)
+    - fcp_packet_aborts (int)
 - nodestat_net
   - tags:
     - ifalias

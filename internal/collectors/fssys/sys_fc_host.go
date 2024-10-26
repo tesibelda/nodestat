@@ -74,6 +74,7 @@ func GatherSysFcHostInfo() error {
 		fields["error_frames"] = *fcInfo.Counters.ErrorFrames
 		fields["rx_frames"] = *fcInfo.Counters.RXFrames
 		fields["tx_frames"] = *fcInfo.Counters.TXFrames
+		fields["fcp_packet_aborts"] = *fcInfo.Counters.FCPPacketAborts
 
 		m = metric.New("nodestat_fc_host", tags, fields, t)
 		fmt.Fprint(os.Stdout, m.String(metric.InfluxLp))
